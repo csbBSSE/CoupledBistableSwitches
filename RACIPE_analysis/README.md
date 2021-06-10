@@ -1,11 +1,5 @@
 
-# Table of Contents
-
-1.  [Pipeline](#org603ff46)
-
-
-
-<a id="org603ff46"></a>
+This folder contains the codes used to analyse the RACIPE simulation data. 
 
 # Pipeline
 
