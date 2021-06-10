@@ -65,7 +65,7 @@ Note: &ldquo;Replicate&rdquo; directory means the individual replicate folders o
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Steady\_state\_Master\_Compile.py</td>
+<td class="org-left">Steady_state_Master_Compile.py</td>
 <td class="org-left">Master</td>
 </tr>
 
