@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [Pipeline](#orge47b0b9)
+1.  [Pipeline](#org603ff46)
 
 
 
-<a id="orge47b0b9"></a>
+<a id="org603ff46"></a>
 
 # Pipeline
 
-The scripts must be run in the following order in order to generate all the necessary files. The Master<sub>Parallel</sub><sub>Pipelin.py</sub> script is based on the pipeline described here with an added functionality of running large number of RACIPE simulations parallely.
+The scripts must be run in the following order in order to generate all the necessary files. The Master\_Parallel\_Pipelin.py script is based on the pipeline described here with an added functionality of running large number of RACIPE simulations parallely.
 The commands to be run are described in the following format:
 Order No. - Name of script / Command to be run - Location / dicrectory in which it is run.
 
@@ -36,14 +36,14 @@ Note: &ldquo;Replicate&rdquo; directory means the individual replicate folders o
 <tbody>
 <tr>
 <td class="org-right">1</td>
-<td class="org-left">Steady<sub>state</sub><sub>count.py</sub></td>
+<td class="org-left">Steady_state_count.py</td>
 <td class="org-left">Replicate</td>
 </tr>
 
 
 <tr>
 <td class="org-right">2</td>
-<td class="org-left">Multistable<sub>counter</sub><sub>bimodality</sub><sub>calc.py</sub></td>
+<td class="org-left">Multistable_counter_bimodality_calc.py</td>
 <td class="org-left">Replicate</td>
 </tr>
 
@@ -71,18 +71,18 @@ Note: &ldquo;Replicate&rdquo; directory means the individual replicate folders o
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Steady<sub>state</sub><sub>Master</sub><sub>Compile.py</sub></td>
+<td class="org-left">Steady\_state\_Master\_Compile.py</td>
 <td class="org-left">Master</td>
 </tr>
 
 
 <tr>
 <td class="org-right">6</td>
-<td class="org-left">steady<sub>state</sub><sub>csv</sub><sub>compile.py</sub></td>
+<td class="org-left">steady_state_csv_compile.py</td>
 <td class="org-left">Master</td>
 </tr>
 </tbody>
 </table>
 
-This order of scripts will generate all the files used in the analysis of the resutls. However, to obtain excel files for ease of use other commands need to be run which are explained in the Master<sub>Parallel</sub><sub>Pipeline.py</sub> script.
+This order of scripts will generate all the files used in the analysis of the resutls. However, to obtain excel files for ease of use other commands need to be run which are explained in the Master\_Parallel\_Pipeline.py script.
 
