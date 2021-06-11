@@ -1,0 +1,1 @@
+This folder has two scripts. The funcs.R script generates the linkstrength and phase data for the RACIPE simulation of a given topo file. stateProbCalc.py uses the link strength and phase data to calculate the probability of each state occuring. 
