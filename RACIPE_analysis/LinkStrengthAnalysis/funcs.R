@@ -1,7 +1,8 @@
-library(tidyverse)
-# source("plot_theme.R")
-# library(GGally)
+## This file discretizes RACIPE states, calculates phases for each parameter set and calculates the linkstrengths for each parameter set.
 
+library(tidyverse)
+
+## discretizes a vector around the weighted mean of the vector 
 discret <- function(x, w = 0.5){
     mx <- sum(x*w)/sum(w)
     sx <- sqrt(sum(w*(x-mx)^2)/sum(w))
@@ -9,6 +10,7 @@ discret <- function(x, w = 0.5){
     ifelse(x>0, 1, 0)
 }
 
+## reads the RACIPE parameter file and assigns column names to the parameter data frame
 readParams <- function(topoFile)
 {
     net <- topoFile %>% str_remove(".topo")
@@ -19,6 +21,7 @@ readParams <- function(topoFile)
     return(df)
 }
 
+## Calculates the linkstrength for each parameter set
 linkStrengthCalc <- function(topoFile)
 {
     df <- readParams(topoFile)
@@ -44,26 +47,7 @@ linkStrengthCalc <- function(topoFile)
     
 }
 
-gkNorm <- function(topoFile)
-{
-    params <- readParams(topoFile)
-    nodes <- colnames(params)
-    nodes <- nodes[str_detect(nodes, "Prod")] %>% str_remove("Prod_of_")
-    gkDf <- sapply(nodes, function(x){
-        params %>% select(contains(paste0("_",x))) %>% set_names("g", "k") %>%
-            mutate(gk = g/k) %>% select(gk) %>% unlist
-    }) %>% data.frame %>% set_names(nodes) %>% mutate(ParID = params$ParID)
-    solutionDf <- read.delim(paste0(str_remove(topoFile, ".topo"), "_solution.dat"), header = F) %>% 
-        set_names(c("ParID", "nStates", "RelStab", nodes)) %>% mutate(RelStab = RelStab/max(RelStab))
-    solnDf <- apply(solutionDf, 1, function(x){
-        par <- x[1]
-        x[nodes] <- x[nodes] - log2(gkDf[par, 1:length(nodes)])
-        x
-    }) %>% reduce(rbind.data.frame)
-    write.csv(solnDf, str_replace(topoFile, ".topo", "_gkNorm.csv"), row.names = F)
-    return(solnDf)
-}
-
+## Compiles all RACIPE solutions into a single file
 solutionCompile <- function(topoFile)
 {
     net <- topoFile %>% str_remove(".topo")
@@ -95,22 +79,19 @@ solutionCompile <- function(topoFile)
     write_delim(compiled, paste0(net, "_solution.dat"), delim = "\t")
 }
 
+## calculates the phases for each parameter set, using the compiled solution file
 phaseCalc <- function(topoFile, gk = F)
 {
     params <- readParams(topoFile)
     nodes <- colnames(params)
     nodes <- nodes[str_detect(nodes, "Prod")] %>% str_remove("Prod_of_")
-    if(gk){
-        solnDf <- gkNorm(topoFile)
-    }
-    else
-    {
-        solnFile <- paste0(str_remove(topoFile, ".topo"), "_solution.dat")
-        if(!file.exists(solnFile))
-            solutionCompile(topoFile)
-        solnDf <- read.delim(solnFile, header = F) %>% 
-            set_names(c("ParID", "nStates", "RelStab", nodes))
-    }
+    
+    solnFile <- paste0(str_remove(topoFile, ".topo"), "_solution.dat")
+    if(!file.exists(solnFile))
+        solutionCompile(topoFile)
+    solnDf <- read.delim(solnFile, header = F) %>% 
+        set_names(c("ParID", "nStates", "RelStab", nodes))
+    
     solnDf[, nodes] <- solnDf %>% select(nodes) %>% sapply(function(x){
         discret(x, solnDf$RelStab)
     })
@@ -118,15 +99,12 @@ phaseCalc <- function(topoFile, gk = F)
         summarise(Phase = paste0(unique(State), collapse = "-"))
     params <- merge(params, solnDf, by = "ParID", all = T)
     nam <- str_remove(topoFile, ".topo")
-    if(gk)
-    {
-        nam <- paste0(nam, "gk")
-    }
     nam <- paste0(nam, "_phases.csv")
     write.csv(params, nam, row.names = F)
     return(params)
 }
 
+## Function calls
 phaseCalc(topoFile)
 linkStrengthCalc(topoFile)
 
